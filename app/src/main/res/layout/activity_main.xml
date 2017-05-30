@@ -7,17 +7,19 @@
     android:orientation="vertical"
     tools:context="com.wili.android.booklistingapp.MainActivity">
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <EditText
+            android:id="@+id/search_text"
             android:layout_width="0dp"
-            android:layout_weight="8"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="4"
             android:layout_height="wrap_content"
+            android:layout_weight="8" />
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
             android:text="Search"/>
     </LinearLayout>
 <ListView

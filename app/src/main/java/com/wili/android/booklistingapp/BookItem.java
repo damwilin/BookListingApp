@@ -8,14 +8,16 @@ public class BookItem {
     private String title;
     private String subtitle;
     private String authors;
-    private String thumbnail;
+    private String thumbnailURL;
     private String description;
+    private int publishedDate;
 
-    public BookItem(String title, String subtitle, String authors, String thumbnail, String description) {
+    public BookItem(String title, String subtitle, String authors, int publishedDate, String thumbnailURL, String description) {
         this.title = title;
         this.subtitle = subtitle;
         this.authors = authors;
-        this.thumbnail = thumbnail;
+        this.publishedDate = publishedDate;
+        this.thumbnailURL = thumbnailURL;
         this.description = description;
     }
 
@@ -31,11 +33,15 @@ public class BookItem {
         return authors;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getThumbnailURL() {
+        return thumbnailURL;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public int getPublishedDate() {
+        return publishedDate;
     }
 }
