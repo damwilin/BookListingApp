@@ -1,5 +1,7 @@
 package com.wili.android.booklistingapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -36,6 +38,17 @@ public class Utils {
             Log.e(LOG_TAG, "Error creating jsonResponse", e);
         }
         return extractFeaturesFromJson(jsonResponse);
+    }
+
+    public static Bitmap createBitmap(String requestURL) {
+        URL url = createURL(requestURL);
+        Bitmap bm = null;
+        try {
+            bm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bm;
     }
 
 

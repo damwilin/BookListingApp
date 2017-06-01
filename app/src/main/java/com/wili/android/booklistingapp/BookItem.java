@@ -1,5 +1,7 @@
 package com.wili.android.booklistingapp;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Damian on 5/30/2017.
  */
@@ -8,16 +10,16 @@ public class BookItem {
     private String title;
     private String subtitle;
     private String authors;
-    private String thumbnailURL;
+    private Bitmap thumbnail;
     private String description;
     private int publishedDate;
 
-    public BookItem(String title, String subtitle, String authors, int publishedDate, String thumbnailURL, String description) {
+    public BookItem(String title, String subtitle, String authors, int publishedDate, Bitmap thumbnail, String description) {
         this.title = title;
         this.subtitle = subtitle;
         this.authors = authors;
         this.publishedDate = publishedDate;
-        this.thumbnailURL = thumbnailURL;
+        this.thumbnail = thumbnail;
         this.description = description;
     }
 
@@ -33,8 +35,8 @@ public class BookItem {
         return authors;
     }
 
-    public String getThumbnailURL() {
-        return thumbnailURL;
+    public Bitmap getThumbnail() {
+        return thumbnail;
     }
 
     public String getDescription() {
