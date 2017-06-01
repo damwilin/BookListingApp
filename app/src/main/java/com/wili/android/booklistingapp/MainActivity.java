@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     Button searchButton;
     @BindView(R.id.list_view)
     ListView listView;
+    @BindView(R.id.empty_view)
+    TextView emptyView;
     private String searchUrl;
     private BooksAdapter booksAdapter;
     private LoaderManager loaderManager;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         booksAdapter = new BooksAdapter(this, new ArrayList<BookItem>());
+        listView.setEmptyView(emptyView);
         listView.setAdapter(booksAdapter);
         loaderManager = getLoaderManager();
         loaderManager.initLoader(LOADER_ID, null, this);
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<BookItem>> loader, List<BookItem> data) {
+        emptyView.setText(R.string.not_found);
         booksAdapter.clear();
         if (data != null)
             booksAdapter.addAll(data);
