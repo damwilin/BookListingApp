@@ -1,5 +1,6 @@
 package com.wili.android.booklistingapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,18 +22,20 @@ import butterknife.ButterKnife;
  */
 
 public class BooksAdapter extends ArrayAdapter<BookItem> {
-    public BooksAdapter(@NonNull Context context, @NonNull List<BookItem> booksList) {
+    private View listView;
+
+    public BooksAdapter(Activity context, @NonNull ArrayList<BookItem> booksList) {
         super(context, 0, booksList);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View listView = convertView;
+        listView = convertView;
         if (listView == null)
             listView = LayoutInflater.from(getContext()).inflate(R.layout.book_item, parent, false);
-        ViewHolder holder = new ViewHolder(listView);
         BookItem currBook = getItem(position);
+        ViewHolder holder = new ViewHolder(listView);
         holder.authors.setText(currBook.getAuthors());
         holder.title.setText(currBook.getTitle());
         if (!currBook.getSubtitle().isEmpty())

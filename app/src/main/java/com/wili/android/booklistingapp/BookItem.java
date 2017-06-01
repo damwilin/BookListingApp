@@ -12,9 +12,9 @@ public class BookItem {
     private String authors;
     private Bitmap thumbnail;
     private String description;
-    private int publishedDate;
+    private String publishedDate;
 
-    public BookItem(String title, String subtitle, String authors, int publishedDate, Bitmap thumbnail, String description) {
+    public BookItem(String title, String subtitle, String authors, String publishedDate, Bitmap thumbnail, String description) {
         this.title = title;
         this.subtitle = subtitle;
         this.authors = authors;
@@ -43,7 +43,7 @@ public class BookItem {
         return description;
     }
 
-    public int getPublishedDate() {
+    public String getPublishedDate() {
         return publishedDate;
     }
 }

@@ -40,7 +40,7 @@ public class Utils {
         return extractFeaturesFromJson(jsonResponse);
     }
 
-    public static Bitmap createBitmap(String requestURL) {
+    private static Bitmap createBitmap(String requestURL) {
         URL url = createURL(requestURL);
         Bitmap bm = null;
         try {
@@ -136,15 +136,17 @@ public class Utils {
                 }
                 String title = volumeInfo.getString("title");
                 String subtitle = volumeInfo.optString("subtitle");
-                int pubDate = volumeInfo.getInt("publishedDate");
-                String description = volumeInfo.getString("description");
+                String pubDate = volumeInfo.getString("publishedDate");
+                String description = volumeInfo.optString("description");
                 JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnailURL = volumeInfo.getString("smallThumbnail");
-                bookList.add(new BookItem(title, subtitle, authors.toString(), pubDate, thumbnailURL, description));
+                String thumbnailURL = imageLinks.getString("smallThumbnail");
+                Bitmap thumbnailBm = createBitmap(thumbnailURL);
+                bookList.add(new BookItem(title, subtitle, authors.toString(), pubDate, thumbnailBm, description));
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the json results", e);
         }
+        Log.e(LOG_TAG, Integer.toString(bookList.size()));
         return bookList;
     }
 }
