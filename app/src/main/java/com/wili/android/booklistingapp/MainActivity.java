@@ -1,8 +1,9 @@
 package com.wili.android.booklistingapp;
-
-
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     ListView listView;
     @BindView(R.id.empty_view)
     TextView emptyView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     private String searchUrl;
     private BooksAdapter booksAdapter;
     private LoaderManager loaderManager;
@@ -41,12 +44,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         booksAdapter = new BooksAdapter(this, new ArrayList<BookItem>());
         listView.setEmptyView(emptyView);
         listView.setAdapter(booksAdapter);
-        loaderManager = getLoaderManager();
-        loaderManager.initLoader(LOADER_ID, null, this);
+        if (!isConnected()) {
+            emptyView.setText(R.string.no_connection);
+        } else {
+            loaderManager = getLoaderManager();
+            loaderManager.initLoader(LOADER_ID, null, this);
+        }
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search();
+                if (isConnected())
+                    search();
+                else
+                    Toast.makeText(MainActivity.this, R.string.no_connection, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -58,10 +69,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<BookItem>> loader, List<BookItem> data) {
+        progressBar.setVisibility(View.GONE);
         emptyView.setText(R.string.not_found);
         booksAdapter.clear();
-        if (data != null)
+        if (data != null) {
             booksAdapter.addAll(data);
+            String foundItems = getResources().getString(R.string.found) + data.size();
+            Toast.makeText(this, foundItems, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -70,11 +85,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void search() {
+        emptyView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
         String keywords = searchText.getText().toString();
         keywords = keywords.replaceAll(" ", "+");
         searchUrl = null;
         searchUrl = BOOKS_URL + keywords;
         Log.e(MainActivity.class.getSimpleName(), searchUrl);
         loaderManager.restartLoader(LOADER_ID, null, this);
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 }

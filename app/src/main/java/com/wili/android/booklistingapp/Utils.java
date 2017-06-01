@@ -134,12 +134,12 @@ public class Utils {
                 for (int a = 0; a < authorsArray.length(); a++) {
                     authors.append(authorsArray.getString(a));
                 }
-                String title = volumeInfo.getString("title");
+                String title = volumeInfo.optString("title");
                 String subtitle = volumeInfo.optString("subtitle");
-                String pubDate = volumeInfo.getString("publishedDate");
+                String pubDate = volumeInfo.optString("publishedDate");
                 String description = volumeInfo.optString("description");
                 JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnailURL = imageLinks.getString("smallThumbnail");
+                String thumbnailURL = imageLinks.optString("smallThumbnail");
                 Bitmap thumbnailBm = createBitmap(thumbnailURL);
                 bookList.add(new BookItem(title, subtitle, authors.toString(), pubDate, thumbnailBm, description));
             }
