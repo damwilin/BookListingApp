@@ -1,4 +1,5 @@
 package com.wili.android.booklistingapp;
+
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
@@ -14,12 +15,15 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<BookItem>> {
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
     private static final String BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?q=";
     @BindView(R.id.search_text)
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private String searchUrl;
     private BooksAdapter booksAdapter;
     private LoaderManager loaderManager;
+    private boolean isClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +49,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         booksAdapter = new BooksAdapter(this, new ArrayList<BookItem>());
         listView.setEmptyView(emptyView);
         listView.setAdapter(booksAdapter);
-        if (!isConnected()) {
-            emptyView.setText(R.string.no_connection);
-        } else {
+        progressBar.setVisibility(View.GONE);
+        if (isConnected()) {
             loaderManager = getLoaderManager();
             loaderManager.initLoader(LOADER_ID, null, this);
+        } else {
+            if (isClicked == false) {
+                emptyView.setText(R.string.populate_list);
+            } else
+                emptyView.setText(R.string.no_connection);
         }
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isClicked = true;
                 if (isConnected())
                     search();
                 else
@@ -70,7 +80,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<BookItem>> loader, List<BookItem> data) {
         progressBar.setVisibility(View.GONE);
-        emptyView.setText(R.string.not_found);
+        if (isClicked == true)
+            emptyView.setText(R.string.not_found);
+        else
+            emptyView.setText(R.string.populate_list);
         booksAdapter.clear();
         if (data != null) {
             booksAdapter.addAll(data);
@@ -88,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         emptyView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         String keywords = searchText.getText().toString();
+        keywords = keywords.trim();
         keywords = keywords.replaceAll(" ", "+");
         searchUrl = null;
         searchUrl = BOOKS_URL + keywords;
@@ -100,5 +114,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         return isConnected;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(getString(R.string.isClicked), isClicked);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        isClicked = savedInstanceState.getBoolean(getString(R.string.isClicked));
     }
 }

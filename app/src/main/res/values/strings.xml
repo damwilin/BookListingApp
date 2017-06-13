@@ -3,4 +3,6 @@
     <string name="not_found">No items found</string>
     <string name="no_connection">No internet connection</string>
     <string name="found">Found: </string>
+    <string name="populate_list">Please type author or title</string>
+    <string name="isClicked">isClicked</string>
 </resources>
