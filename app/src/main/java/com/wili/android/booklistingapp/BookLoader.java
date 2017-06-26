@@ -27,6 +27,6 @@ public class BookLoader extends AsyncTaskLoader<List<BookItem>> {
     public List<BookItem> loadInBackground() {
         if (url == null)
             return null;
-        return Utils.fetchData(url);
+        return Utils.fetchData(url, getContext());
     }
 }

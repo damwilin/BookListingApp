@@ -1,9 +1,11 @@
 package com.wili.android.booklistingapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +40,7 @@ public class Utils {
     private Utils() {
     }
 
-    public static ArrayList<BookItem> fetchData(String requestURL) {
+    public static ArrayList<BookItem> fetchData(String requestURL, Context context) {
         URL url = createURL(requestURL);
         String jsonResponse = null;
         try {
@@ -46,7 +48,7 @@ public class Utils {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error creating jsonResponse", e);
         }
-        return extractFeaturesFromJson(jsonResponse);
+        return extractFeaturesFromJson(jsonResponse, context);
     }
 
     private static Bitmap createBitmap(String requestURL) {
@@ -127,7 +129,7 @@ public class Utils {
         return output.toString();
     }
 
-    private static ArrayList<BookItem> extractFeaturesFromJson(String jsonResponse) {
+    private static ArrayList<BookItem> extractFeaturesFromJson(String jsonResponse, Context context) {
         ArrayList<BookItem> bookList = new ArrayList<BookItem>();
         if (TextUtils.isEmpty(jsonResponse))
             return null;
@@ -154,8 +156,8 @@ public class Utils {
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the json results", e);
+            Toast.makeText(context, "Problem parsing the json results", Toast.LENGTH_SHORT).show();
         }
-        Log.e(LOG_TAG, Integer.toString(bookList.size()));
         return bookList;
     }
 }
