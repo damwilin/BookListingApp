@@ -24,7 +24,16 @@ import java.util.ArrayList;
  */
 
 public class Utils {
-    public static final String LOG_TAG = Utils.class.getSimpleName();
+    private static final String KEY_ITEMS = "items";
+    private static final String KEY_VOLUMEINFO = "volumeInfo";
+    private static final String KEY_AUTHORS = "authors";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_SUBTITLE = "subtitle";
+    private static final String KEY_PUBLISHED_DATE = "publishedDate";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_IMAGE_LINKS = "imageLinks";
+    private static final String KEY_SMALL_THUMBNAIL = "smallThumbnail";
+    private static final String LOG_TAG = Utils.class.getSimpleName();
 
     private Utils() {
     }
@@ -125,21 +134,21 @@ public class Utils {
 
         try {
             JSONObject root = new JSONObject(jsonResponse);
-            JSONArray items = root.getJSONArray("items");
+            JSONArray items = root.getJSONArray(KEY_ITEMS);
             for (int i = 0; i < items.length(); i++) {
                 JSONObject currItem = items.getJSONObject(i);
-                JSONObject volumeInfo = currItem.getJSONObject("volumeInfo");
-                JSONArray authorsArray = volumeInfo.getJSONArray("authors");
+                JSONObject volumeInfo = currItem.getJSONObject(KEY_VOLUMEINFO);
+                JSONArray authorsArray = volumeInfo.getJSONArray(KEY_AUTHORS);
                 StringBuilder authors = new StringBuilder();
                 for (int a = 0; a < authorsArray.length(); a++) {
                     authors.append(authorsArray.getString(a));
                 }
-                String title = volumeInfo.optString("title");
-                String subtitle = volumeInfo.optString("subtitle");
-                String pubDate = volumeInfo.optString("publishedDate");
-                String description = volumeInfo.optString("description");
-                JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnailURL = imageLinks.optString("smallThumbnail");
+                String title = volumeInfo.optString(KEY_TITLE);
+                String subtitle = volumeInfo.optString(KEY_SUBTITLE);
+                String pubDate = volumeInfo.optString(KEY_PUBLISHED_DATE);
+                String description = volumeInfo.optString(KEY_DESCRIPTION);
+                JSONObject imageLinks = volumeInfo.getJSONObject(KEY_IMAGE_LINKS);
+                String thumbnailURL = imageLinks.optString(KEY_SMALL_THUMBNAIL);
                 Bitmap thumbnailBm = createBitmap(thumbnailURL);
                 bookList.add(new BookItem(title, subtitle, authors.toString(), pubDate, thumbnailBm, description));
             }
