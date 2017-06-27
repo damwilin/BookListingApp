@@ -50,10 +50,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listView.setEmptyView(emptyView);
         listView.setAdapter(booksAdapter);
         progressBar.setVisibility(View.GONE);
-        if (isConnected()) {
-            loaderManager = getLoaderManager();
-            loaderManager.initLoader(LOADER_ID, null, this);
-        } else {
+        loaderManager = getLoaderManager();
+        loaderManager.initLoader(LOADER_ID, null, this);
+        if (!isConnected()) {
             if (isClicked == false) {
                 emptyView.setText(R.string.populate_list);
             } else

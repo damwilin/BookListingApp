@@ -144,6 +144,7 @@ public class Utils {
                 StringBuilder authors = new StringBuilder();
                 for (int a = 0; a < authorsArray.length(); a++) {
                     authors.append(authorsArray.getString(a));
+                    authors.append(" ");
                 }
                 String title = volumeInfo.optString(KEY_TITLE);
                 String subtitle = volumeInfo.optString(KEY_SUBTITLE);
@@ -152,11 +153,10 @@ public class Utils {
                 JSONObject imageLinks = volumeInfo.getJSONObject(KEY_IMAGE_LINKS);
                 String thumbnailURL = imageLinks.optString(KEY_SMALL_THUMBNAIL);
                 Bitmap thumbnailBm = createBitmap(thumbnailURL);
-                bookList.add(new BookItem(title, subtitle, authors.toString(), pubDate, thumbnailBm, description));
+                bookList.add(new BookItem(title, subtitle, authors.toString().trim(), pubDate, thumbnailBm, description));
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the json results", e);
-            Toast.makeText(context, "Problem parsing the json results", Toast.LENGTH_SHORT).show();
         }
         return bookList;
     }
