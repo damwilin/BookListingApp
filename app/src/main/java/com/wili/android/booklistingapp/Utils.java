@@ -21,6 +21,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
+import static com.wili.android.booklistingapp.R.id.authors;
+
 /**
  * Created by Damian on 5/30/2017.
  */
@@ -137,15 +139,21 @@ public class Utils {
         try {
             JSONObject root = new JSONObject(jsonResponse);
             JSONArray items = root.getJSONArray(KEY_ITEMS);
+            if (items == null)
+                return null;
             for (int i = 0; i < items.length(); i++) {
                 JSONObject currItem = items.getJSONObject(i);
                 JSONObject volumeInfo = currItem.getJSONObject(KEY_VOLUMEINFO);
-                JSONArray authorsArray = volumeInfo.getJSONArray(KEY_AUTHORS);
                 StringBuilder authors = new StringBuilder();
-                for (int a = 0; a < authorsArray.length(); a++) {
-                    authors.append(authorsArray.getString(a));
-                    authors.append(" ");
-                }
+                if (volumeInfo.has(KEY_AUTHORS)) {
+                    JSONArray authorsArray = volumeInfo.getJSONArray(KEY_AUTHORS);
+                    for (int a = 0; a < authorsArray.length(); a++) {
+                        authors.append(authorsArray.getString(a));
+                        authors.append(" ");
+                    }
+                } else
+                    authors.append("Author N/A");
+
                 String title = volumeInfo.optString(KEY_TITLE);
                 String subtitle = volumeInfo.optString(KEY_SUBTITLE);
                 String pubDate = volumeInfo.optString(KEY_PUBLISHED_DATE);
